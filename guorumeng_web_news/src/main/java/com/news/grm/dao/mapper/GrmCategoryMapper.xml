@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.grm.dao.GrmCategoryDao">
+    <update id="updateByName" parameterType="java.lang.String">
+        update grm_category set status=0 where name=#{name}
+    </update>
+
+    <insert id="addGrmCategory" parameterType="GrmCategory">
+        insert into grm_category(name) value(#{name})
+    </insert>
+
+    <select id="findAll" resultMap="grmCategoryMap">
+        select id,name from grm_category where status=1
+    </select>
+    <resultMap id="grmCategoryMap" type="GrmCategory">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
+</mapper>

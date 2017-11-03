@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="guorumeng_web_news:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="grm.web.news.war">
+      <element id="artifact" artifact-name="guorumeng_web_news:war exploded" />
+    </root>
+  </artifact>
+</component>

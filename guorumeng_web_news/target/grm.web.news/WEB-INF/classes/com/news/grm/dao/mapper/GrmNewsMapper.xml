@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.grm.dao.GrmNewsDao">
+
+    <update id="updateByName" parameterType="java.lang.String">
+        UPDATE grm_news SET category_id = 0
+        WHERE category_id=(SELECT id FROM grm_category WHERE NAME=#{name})
+    </update>
+
+    <select id="findById" resultMap="grmNewsMap" parameterType="int">
+        select n.id,n.author,n.title,n.content,n.created_date,c.id category_id,c.name
+        from grm_news n , grm_category c
+        where n.category_id=c.id and n.id=#{id}
+    </select>
+
+    <insert id="addGrmNews" parameterType="GrmNews">
+        insert into grm_news(category_id,author,title,content,created_date)
+        values(#{grmCategory.id},#{author},#{title},#{content},now())
+    </insert>
+
+    <select id="findGrmNews" parameterType="GrmNewsUtil" resultMap="grmNewsMap">
+        select n.id,n.author,n.title,n.content,n.created_date,c.id category_id,c.name
+        from grm_news n , grm_category c
+        <where>
+            n.category_id=c.id
+            <if test="author!=null and author!=''"> and author=#{author}</if>
+            <if test="title!=null and title!=''"> and title like concat('%',#{title},'%')</if>
+            <if test="content!=null and content!=''"> and content like concat('%',#{content},'%')</if>
+
+            <if test="grmCategory!=null and grmCategory.name!=null and grmCategory.name!=''"> and name like concat('%',#{grmCategory.name},'%')</if>
+
+            <if test="startTime!=null"> and created_date &gt;=#{startTime}</if>
+            <if test="endTime!=null"> and created_date &lt;=#{endTime}</if>
+        </where>
+    </select>
+
+    <resultMap id="grmNewsMap" type="GrmNews">
+        <id property="id" column="id"/>
+        <result property="author" column="author"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdDate" column="created_date"/>
+        <association property="grmCategory" javaType="GrmCategory">
+            <result property="id" column="category_id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+</mapper>
